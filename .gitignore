@@ -1,0 +1,9 @@
+# Klíč ke statistikám – na server se nahrává ručně (vzor: stats/config.example.php)
+stats/config.php
+
+# Nasbíraná návštěvnost – vzniká až na serveru
+stats/data/*
+!stats/data/.htaccess
+
+# Rozepsané články, které nemají být vidět ani v repozitáři
+koncepty/

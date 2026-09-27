@@ -1,0 +1,38 @@
+# Blog Ivety Nešpor Levové
+Options -Indexes
+DirectoryIndex index.php
+
+<FilesMatch "\.md$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Vždy HTTPS (kromě náhledu na localhostu)
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Staré adresy z WordPressu (platí pro blog.nespor-levova.cz)
+  RewriteRule ^feed/?$ / [L,R=301]
+  RewriteRule ^category/ / [L,R=301]
+  RewriteRule ^author/ / [L,R=301]
+  RewriteRule ^kontakt/?$ https://nespor-levova.cz/#kontakt [L,R=301,NE]
+  RewriteRule ^ochrana-osobnich-udaju/?$ / [L,R=301]
+  RewriteRule ^wp-content/uploads/(\d{4})/(\d{2})/(.+?)(-\d+x\d+|-scaled)?\.(jpe?g|png|gif|webp)$ /img/$1/$2/$3.$5 [L,R=301,NC]
+
+  # Všechno ostatní, co není skutečný soubor nebo složka, obslouží index.php
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
