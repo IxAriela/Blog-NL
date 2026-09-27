@@ -8,10 +8,15 @@ const POSTS_DIR = __DIR__ . '/../clanky';
 
 // Adresa složky blogu na serveru: "/" na blog.nespor-levova.cz, "/blog/" na localhost/blog/.
 // Díky tomu (a značce <base> v hlavičce) se v HTML píšou cesty bez úvodního lomítka: img/…, css/…
-define('BASE', rtrim(str_replace('\\', '/', substr(
-    realpath(__DIR__ . '/..'),
-    strlen(realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '')
-)), '/') . '/');
+// Počítá se z adresy spuštěného skriptu (index.php nebo stats/…), ne z DOCUMENT_ROOT – ten má
+// na hostingu u poddomény nastavenou nadřazenou složku domény.
+define('BASE', (function () {
+    $root = str_replace('\\', '/', realpath(__DIR__ . '/..'));
+    $scriptDir = str_replace('\\', '/', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
+    $inside = substr($scriptDir, strlen($root));                            // "" nebo "/stats"
+    $urlDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/'); // "/blog", "/blog/stats", ""
+    return rtrim(substr($urlDir, 0, strlen($urlDir) - strlen($inside)), '/') . '/';
+})());
 
 date_default_timezone_set('Europe/Prague');
 mb_internal_encoding('UTF-8');
@@ -56,7 +61,7 @@ function load_posts()
             continue;
         }
 
-        $text = trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags($body), ENT_QUOTES, 'UTF-8')));
+        $text = trim(preg_replace('/[\s\x{00A0}]+/u', ' ', html_entity_decode(strip_tags($body), ENT_QUOTES, 'UTF-8')));
         preg_match('/<img[^>]+src="([^"]+)"/', $body, $img);
 
         $posts[$slug] = [

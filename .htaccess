@@ -22,7 +22,15 @@ DirectoryIndex index.php
   RewriteRule ^ochrana-osobnich-udaju/?$ / [L,R=301]
   RewriteRule ^wp-content/uploads/(\d{4})/(\d{2})/(.+?)(-\d+x\d+|-scaled)?\.(jpe?g|png|gif|webp)$ /img/$1/$2/$3.$5 [L,R=301,NC]
 
-  # Všechno ostatní, co není skutečný soubor nebo složka, obslouží index.php
+  # Všechno ostatní, co není skutečný soubor nebo složka, obslouží index.php.
+  # Na serveru s lomítkem na začátku: hosting má poddoménu ve složce pod doménou
+  # a bez lomítka by přepis mířil do špatné složky (chyba 500).
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)
+  RewriteRule ^ /index.php [L]
+
+  # Náhled na localhost/blog/
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.php [L]
