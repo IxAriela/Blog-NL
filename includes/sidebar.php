@@ -4,7 +4,9 @@ $activeTag = $activeTag ?? '';
 ?>
         <aside class="sidebar">
           <section class="widget widget-about">
-            <img src="img/o-mne.webp" alt="Iveta Nešpor Levová" width="96" height="96">
+            <div class="widget-img">
+              <img src="img/o-mne.webp" alt="Iveta Nešpor Levová">
+            </div>
             <h2>Iveta Nešpor Levová</h2>
             <p>Jmenuji se Iveta Nešpor Levová, baví mě weby, technologie a&nbsp;všechno kolem nich. Krom internetu mám ráda knihy, přírodu a&nbsp;focení, kaktusy a&nbsp;sukulenty, koloběžku a&nbsp;občas i&nbsp;nějakou tu aktivnější zábavu. V&nbsp;minulosti mě dostaly i&nbsp;běžecké a&nbsp;OCR závody. Poslední dobou si navíc hodně hraju s&nbsp;AI a&nbsp;stavím vlastní virtuální stáj Ranč snů.</p>
             <a href="https://nespor-levova.cz/" class="card-link">Více o mně&nbsp;→</a>
